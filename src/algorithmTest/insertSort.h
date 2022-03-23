@@ -1,3 +1,8 @@
+// Copyright (c) 2022 algorithum sort
+// thefist@126.com
+// 2022/3/23 
+// Official repository: https://github.com/thefistlei/algorithm 
+
 #pragma once
 
 #ifndef INSERTSORT_H
@@ -28,7 +33,7 @@ namespace insertSort
         int a[] = { 1, 4, 5, 2, 10, 8 };
         int nSize = sizeof(a) / sizeof(int);
         test1::insertionSort(a, nSize);
-        int c = 3;
+        std::cout << "end" << std::endl;
     } 
 }
  

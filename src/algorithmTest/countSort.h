@@ -1,3 +1,9 @@
+// Copyright (c) 2022 algorithum sort
+// thefist@126.com
+// 2022/3/23 
+// Official repository: https://github.com/thefistlei/algorithm 
+
+
 #pragma once
 
 #ifndef COUNTSORT_H
@@ -101,7 +107,7 @@ namespace countSort
         nSize = sizeof(b) / sizeof(int);
         test2::countSort(b, nSize);
 
-        int c = 3;
+        std::cout << "end" << std::endl;
     } 
 }
  

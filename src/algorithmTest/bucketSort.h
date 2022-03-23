@@ -1,74 +1,177 @@
+// Copyright (c) 2022 algorithum sort
+// thefist@126.com
+// 2022/3/23 
+// Official repository: https://github.com/thefistlei/algorithm 
+
 #pragma once
 
 #ifndef BUCKETSORT_H
 #define BUCKETSORT_H
  
 #include <iostream> 
+#include <iomanip>
+
+
+#include "common.h"
+
 
 using namespace std;
 
-namespace countSort
+namespace bucketSort
 {
     namespace test1
     {  
-       // void countSort(vector<int>& arr)
-       // {
-           /* int max = *max_element(arr.begin(), arr.end());
-            int min = *min_element(arr.begin(), arr.end());
-            int range = max - min + 1;
+        // Bucket sort in C++
+         
+#define NARRAY 7   // Array size
+#define NBUCKET 6  // Number of buckets
+#define INTERVAL 10  // Each bucket capacity
 
-            vector<int> count(range), output(arr.size());
-            for (int i = 0; i < arr.size(); i++)
-                count[arr[i] - min]++;
+        struct Node {
+            int data;
+            struct Node* next;
+        };
 
-            for (int i = 1; i < count.size(); i++)
-                count[i] += count[i - 1];
+        void BucketSort(int arr[]);
+        struct Node* InsertionSort(struct Node* list); 
+        void printBuckets(struct Node* list);
 
-            for (int i = arr.size() - 1; i >= 0; i--) {
-                output[count[arr[i] - min] - 1] = arr[i];
-                count[arr[i] - min]--;
+        int getBucketIndex(int value) {
+            return value / INTERVAL;
+        }
+
+        // Sorting function
+        void BucketSort(int arr[]) {
+            int i, j;
+            struct Node** buckets;
+
+            // Create buckets and allocate memory size
+            buckets = (struct Node**)malloc(sizeof(struct Node*) * NBUCKET);
+
+            // Initialize empty buckets
+            for (i = 0; i < NBUCKET; ++i) {
+                buckets[i] = NULL;
             }
 
-            for (int i = 0; i < arr.size(); i++)
-                arr[i] = output[i];*/
-      //  }
-        
-        void countSort(int arr[], int len) { 
-            //1.获得数列的最大值
-            int max = arr[0];
-            for (int i = 1; i < len; i++) {
-                if (arr[i] > max)
-                    max = arr[i];
+            // Fill the buckets with respective elements
+            for (i = 0; i < NARRAY; ++i) {
+                struct Node* current;
+                int pos = getBucketIndex(arr[i]);
+                current = (struct Node*)malloc(sizeof(struct Node));
+                current->data = arr[i];
+                current->next = buckets[pos];
+                buckets[pos] = current;
             }
 
-            //2.根据数列的最大值肯定统计数组的长度
-            int* countArray = new int[max + 1]{};
+            // Print the buckets along with their elements
+            for (i = 0; i < NBUCKET; i++) {
+                cout << "Bucket[" << i << "] : ";
+                printBuckets(buckets[i]);
+                cout << endl;
+            }
 
-            //3.遍历数列，填充统计数组
-            for (int i = 0; i < len; i++)
-                countArray[arr[i]]++;
+            // Sort the elements of each bucket
+            for (i = 0; i < NBUCKET; ++i) {
+                buckets[i] = InsertionSort(buckets[i]);
+            }
 
-            //4.遍历统计数组，输出结果
-            int index = 0; 
-            for (int i = 0; i < max + 1; i++) {
-                while (countArray[i] > 0) { 
-                    arr[index++] = i;
-                    countArray[i]--;
+            cout << "-------------" << endl;
+            cout << "Bucktets after sorted" << endl;
+            for (i = 0; i < NBUCKET; i++) {
+                cout << "Bucket[" << i << "] : ";
+                printBuckets(buckets[i]);
+                cout << endl;
+            }
+
+            // Put sorted elements on arr
+            for (j = 0, i = 0; i < NBUCKET; ++i) {
+                struct Node* node;
+                node = buckets[i];
+                while (node) {
+                    arr[j++] = node->data;
+                    node = node->next;
                 }
-            } 
+            }
+
+            for (i = 0; i < NBUCKET; ++i) {
+                struct Node* node;
+                node = buckets[i];
+                while (node) {
+                    struct Node* tmp;
+                    tmp = node;
+                    node = node->next;
+                    free(tmp);
+                }
+            }
+            free(buckets);
+            return;
+        }
+
+        // Function to sort the elements of each bucket
+        struct Node* InsertionSort(struct Node* list) {
+            struct Node* k, * nodeList;
+            if (list == 0 || list->next == 0) {
+                return list;
+            }
+
+            nodeList = list;
+            k = list->next;
+            nodeList->next = 0;
+            while (k != 0) {
+                struct Node* ptr;
+                if (nodeList->data > k->data) {
+                    struct Node* tmp;
+                    tmp = k;
+                    k = k->next;
+                    tmp->next = nodeList;
+                    nodeList = tmp;
+                    continue;
+                }
+
+                for (ptr = nodeList; ptr->next != 0; ptr = ptr->next) {
+                    if (ptr->next->data > k->data)
+                        break;
+                }
+
+                if (ptr->next != 0) {
+                    struct Node* tmp;
+                    tmp = k;
+                    k = k->next;
+                    tmp->next = ptr->next;
+                    ptr->next = tmp;
+                    continue;
+                }
+                else {
+                    ptr->next = k;
+                    k = k->next;
+                    ptr->next->next = 0;
+                    continue;
+                }
+            }
+            return nodeList;
+        }
+
+
+        void printBuckets(struct Node* list) {
+            struct Node* cur = list;
+            while (cur) {
+                cout << setw(3) << cur->data;
+                cur = cur->next;
+            }
+        }
+
+        // Driver code
+        void test(void) {
+            int array[NARRAY] = { 42, 32, 33, 52, 37, 47, 51 };
+             
+            BucketSort(array);
+            cout << "-------------" << endl; 
+            print(array);
         }
     }   
  
-    void test() { 
-        int a[] = { 1, 4, 5, 2, 10, 8 };
-        int nSize = sizeof(a) / sizeof(int);
-        test1::countSort(a, nSize);
-
-        int b[] = { 1, 4, 5, 2, 10, 8 };
-        nSize = sizeof(b) / sizeof(int);
-        test2::countSort(b, nSize);
-
-        int c = 3;
+    void test() {  
+        test1::test(); 
     } 
 }
  

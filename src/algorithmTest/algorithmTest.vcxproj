@@ -145,6 +145,7 @@
     <ClInclude Include="bucketSort.h" />
     <ClInclude Include="countSort.h" />
     <ClInclude Include="insertSort.h" />
+    <ClInclude Include="kth.h" />
     <ClInclude Include="quickSort.h" />
     <ClInclude Include="selectSort.h" />
   </ItemGroup>

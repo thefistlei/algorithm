@@ -1,3 +1,9 @@
+// Copyright (c) 2022 algorithum sort
+// thefist@126.com
+// 2022/3/23 
+// Official repository: https://github.com/thefistlei/algorithm 
+
+
 #pragma once
 
 #ifndef QUICKSORT_H
@@ -174,8 +180,7 @@ namespace quickSort
         int b[] = { 1, 4, 5, 2, 10, 8 };
         nSize = sizeof(b) / sizeof(int);
         test2::quickSort(b, 0, nSize - 1);
-        int c = 3;
-
+          
         test3::quickSort();
     } 
 }
